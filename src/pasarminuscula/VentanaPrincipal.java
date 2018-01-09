@@ -140,11 +140,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         }
         else{
+            boolean punto = false;
+            
             for(int i = 0; i < titulo.length(); i++){
-                if(i == 0){
+                if(i == 0 || (punto && titulo.charAt(i) != ' ')){
                     tituloModificadoChar[i] = titulo.charAt(i);
+                    punto = false;
                 }
                 else{
+                    if(titulo.charAt(i) == '.'){
+                        punto = true;
+                    }
+                    
                     tituloModificadoChar[i] = titulo.toLowerCase().charAt(i);
                 }
             }
