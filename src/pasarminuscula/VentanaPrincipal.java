@@ -122,44 +122,45 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_pegarActionPerformed
 
     private void transformarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transformarActionPerformed
-        String titulo;
-        titulo = original.getText();
-        char tituloModificadoChar[] = new char [titulo.length()];
+        String texto;
+        texto = original.getText();
+        char tituloModificadoChar[] = new char [texto.length()];
         
         if(modo == 0){
-            for(int i = 0; i < titulo.length(); i++){
+            for(int i = 0; i < texto.length(); i++){
                 if(i == 0){
-                    tituloModificadoChar[i] = titulo.charAt(i);
+                    tituloModificadoChar[i] = texto.charAt(i);
                 }
                 else if(tituloModificadoChar[i - 1] == ' '){
-                    tituloModificadoChar[i] = titulo.charAt(i);
+                    tituloModificadoChar[i] = texto.charAt(i);
                 }
                 else{
-                    tituloModificadoChar[i] = titulo.toLowerCase().charAt(i);
+                    tituloModificadoChar[i] = texto.toLowerCase().charAt(i);
                 }
             }
         }
         else{
             boolean punto = false;
             
-            for(int i = 0; i < titulo.length(); i++){
-                if(i == 0 || (punto && titulo.charAt(i) != ' ')){
-                    tituloModificadoChar[i] = titulo.charAt(i);
+            for(int i = 0; i < texto.length(); i++){
+                
+                if(i == 0 || (punto && texto.charAt(i) != ' ')){
+                    tituloModificadoChar[i] = texto.charAt(i);
                     punto = false;
                 }
                 else{
-                    if(titulo.charAt(i) == '.'){
+                    if(texto.charAt(i) == '.'){
                         punto = true;
                     }
                     
-                    tituloModificadoChar[i] = titulo.toLowerCase().charAt(i);
+                    tituloModificadoChar[i] = texto.toLowerCase().charAt(i);
                 }
             }
         }
         
-        titulo = String.valueOf(tituloModificadoChar);
+        texto = String.valueOf(tituloModificadoChar);
         
-        transformado.setText(titulo);
+        transformado.setText(texto);
     }//GEN-LAST:event_transformarActionPerformed
 
     private void copiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copiarActionPerformed
