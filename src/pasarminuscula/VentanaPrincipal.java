@@ -8,6 +8,7 @@ package pasarminuscula;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,15 +16,25 @@ import java.awt.datatransfer.StringSelection;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    int modo;  // 0 = Cambiar nombre  1 = Cambiar título
+    int modo;  // 0 = Cambiar nombre  1 = Cambiar título 2 = Quitar espacios
     
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
         initComponents();
-        setTitle("Transformar nombre");
-        modo = 0; 
+        setTitle("Transformar título");
+        modo = 1; 
+    }
+    
+    String getStringRepresentation(ArrayList<Character> list)
+    {    
+        StringBuilder builder = new StringBuilder(list.size());
+        for(Character ch: list)
+        {
+            builder.append(ch);
+        }
+        return builder.toString();
     }
 
     /**
@@ -42,7 +53,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         transformar = new javax.swing.JButton();
         copiar = new javax.swing.JButton();
         limpiar = new javax.swing.JButton();
-        cambiarModo = new javax.swing.JButton();
+        programa = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         original = new javax.swing.JTextArea();
@@ -52,12 +63,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(700, 300));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Hecho por Rafa Medina Facal     ");
+        jLabel1.setText("Hecho por Rafael Medina Facal     ");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_END);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         pegar.setText("Pegar");
         pegar.addActionListener(new java.awt.event.ActionListener() {
@@ -91,13 +102,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
         jPanel2.add(limpiar);
 
-        cambiarModo.setText("Cambiar a título");
-        cambiarModo.addActionListener(new java.awt.event.ActionListener() {
+        programa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Título", "Nombre", "Espacios" }));
+        programa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cambiarModoActionPerformed(evt);
+                programaActionPerformed(evt);
             }
         });
-        jPanel2.add(cambiarModo);
+        jPanel2.add(programa);
 
         jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_END);
 
@@ -124,41 +135,98 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void transformarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transformarActionPerformed
         String texto;
         texto = original.getText();
-        char tituloModificadoChar[] = new char [texto.length()];
+        ArrayList<Character> textoModificaco = new ArrayList<Character>();
         
         if(modo == 0){
+            boolean espacio = false;
+            
             for(int i = 0; i < texto.length(); i++){
-                if(i == 0){
-                    tituloModificadoChar[i] = texto.charAt(i);
-                }
-                else if(tituloModificadoChar[i - 1] == ' '){
-                    tituloModificadoChar[i] = texto.charAt(i);
+                
+                if(texto.charAt(i) == ' '){
+                    espacio = true;
                 }
                 else{
-                    tituloModificadoChar[i] = texto.toLowerCase().charAt(i);
+                    espacio = false;
+                }
+                
+                if(espacio){
+                    if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                        textoModificaco.add(texto.charAt(i));
+                    }
+                }
+                else{
+                    if(i == 0){
+                        textoModificaco.add(texto.charAt(i));
+                    }
+                    else if(texto.charAt(i - 1) == ' '){
+                        textoModificaco.add(texto.charAt(i));
+                    }
+                    else{
+                        textoModificaco.add(texto.toLowerCase().charAt(i));
+                    }
+                }
+            }
+        }
+        else if(modo == 1){
+            boolean punto = false;
+            boolean espacio = false;
+            boolean espacioDelantero = false;
+            
+            for(int i = 0; i < texto.length(); i++){
+                
+                if(texto.charAt(i) == ' '){
+                    espacio = true;
+                    if(textoModificaco.isEmpty()){
+                        espacioDelantero = true;
+                    }
+                }
+                else{
+                    espacio = false;
+                }
+                
+                if(espacio){
+                    if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                        textoModificaco.add(texto.charAt(i));
+                    }
+                }
+                else{
+                    if(espacioDelantero || i == 0 || (punto && texto.charAt(i) != ' ')){
+                        textoModificaco.add(texto.charAt(i));
+                        punto = false;
+                        espacioDelantero = false;
+                    }
+                    else{
+                        if(texto.charAt(i) == '.'){
+                            punto = true;
+                        }
+                        textoModificaco.add(texto.toLowerCase().charAt(i));
+                    }
                 }
             }
         }
         else{
-            boolean punto = false;
-            
+            boolean espacio = false;
             for(int i = 0; i < texto.length(); i++){
-                
-                if(i == 0 || (punto && texto.charAt(i) != ' ')){
-                    tituloModificadoChar[i] = texto.charAt(i);
-                    punto = false;
+                if(texto.charAt(i) == ' '){
+                    espacio = true;
                 }
                 else{
-                    if(texto.charAt(i) == '.'){
-                        punto = true;
-                    }
-                    
-                    tituloModificadoChar[i] = texto.toLowerCase().charAt(i);
+                    espacio = false;
                 }
+                
+                if(espacio){
+                    if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                        textoModificaco.add(texto.charAt(i));
+                    }
+                }
+                else{
+                    textoModificaco.add(texto.charAt(i));
+                }
+                
             }
         }
-        
-        texto = String.valueOf(tituloModificadoChar);
+       
+        texto = getStringRepresentation(textoModificaco);
         
         transformado.setText(texto);
     }//GEN-LAST:event_transformarActionPerformed
@@ -177,21 +245,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         original.replaceSelection("");
     }//GEN-LAST:event_limpiarActionPerformed
 
-    private void cambiarModoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cambiarModoActionPerformed
-        if(modo == 0){
-            modo = 1;
+    private void programaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programaActionPerformed
+        if(programa.getSelectedItem() == "Nombre"){
+            setTitle("Transformar nombre");
+            modo = 0;
+        }
+        else if(programa.getSelectedItem() == "Título"){
             setTitle("Transformar título");
-            cambiarModo.setText("Cambiar a nombre");
+            modo = 1;
         }
         else{
-            modo = 0;
-            setTitle("Transformar nombre");
-            cambiarModo.setText("Cambiar a título");
+            setTitle("Quitar espacios");
+            modo = 2;
         }
-    }//GEN-LAST:event_cambiarModoActionPerformed
+    }//GEN-LAST:event_programaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cambiarModo;
     private javax.swing.JButton copiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -201,6 +270,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton limpiar;
     private javax.swing.JTextArea original;
     private javax.swing.JButton pegar;
+    private javax.swing.JComboBox<String> programa;
     private javax.swing.JTextField transformado;
     private javax.swing.JButton transformar;
     // End of variables declaration//GEN-END:variables
