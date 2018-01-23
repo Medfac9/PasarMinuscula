@@ -23,10 +23,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      */
     public VentanaPrincipal() {
         initComponents();
+        //Inicializo el programa en el modo cambiar título
         setTitle("Transformar título");
         modo = 1; 
     }
     
+    //Función para pasar de un array de caracteres a un string
     String getStringRepresentation(ArrayList<Character> list)
     {    
         StringBuilder builder = new StringBuilder(list.size());
@@ -142,12 +144,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             
             for(int i = 0; i < texto.length(); i++){
                 
-                if(texto.charAt(i) == ' '){
-                    espacio = true;
-                }
-                else{
-                    espacio = false;
-                }
+                espacio = texto.charAt(i) == ' ';
                 
                 if(espacio){
                     if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
@@ -207,36 +204,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         else{
             boolean espacio = false;
             boolean tabulador = false;
+            boolean espacioYtabulador = false;
             
             for(int i = 0; i < texto.length(); i++){
-                if(texto.charAt(i) == ' '){
-                    espacio = true;
-                }
-                else{
-                    espacio = false;
+                espacio = texto.charAt(i) == ' ';
+                
+                tabulador = texto.charAt(i) == '\t';
+                
+                if(i != 0){
+                    espacioYtabulador = (texto.charAt(i - 1) == ' ' && texto.charAt(i) == '\t') || (texto.charAt(i) == ' ' && texto.charAt(i - 1) == '\t');
                 }
                 
-                if(texto.charAt(i) == '\t'){
-                    tabulador = true;
-                }
-                else{
-                    tabulador = false;
-                }
-                
-                if(!tabulador){
-                    if(espacio){
-                        if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                if(!espacioYtabulador){
+                    if(!tabulador){
+                        if(espacio){
+                            if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                                textoModificaco.add(texto.charAt(i));
+                            }
+                        }
+                        else{
                             textoModificaco.add(texto.charAt(i));
                         }
                     }
                     else{
-                        textoModificaco.add(texto.charAt(i));
+                        if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != '\t' && texto.charAt(i + 1) != '\n'){
+                            textoModificaco.add(' ');
+                        }
                     }
                 }
-                else{
-                    textoModificaco.add(' ');
-                }
-                
             }
         }
        
