@@ -206,6 +206,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         else{
             boolean espacio = false;
+            boolean tabulador = false;
+            
             for(int i = 0; i < texto.length(); i++){
                 if(texto.charAt(i) == ' '){
                     espacio = true;
@@ -214,13 +216,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     espacio = false;
                 }
                 
-                if(espacio){
-                    if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                if(texto.charAt(i) == '\t'){
+                    tabulador = true;
+                }
+                else{
+                    tabulador = false;
+                }
+                
+                if(!tabulador){
+                    if(espacio){
+                        if(!textoModificaco.isEmpty() && texto.charAt(i + 1) != ' ' && texto.charAt(i + 1) != '\n'){
+                            textoModificaco.add(texto.charAt(i));
+                        }
+                    }
+                    else{
                         textoModificaco.add(texto.charAt(i));
                     }
                 }
                 else{
-                    textoModificaco.add(texto.charAt(i));
+                    textoModificaco.add(' ');
                 }
                 
             }
@@ -243,6 +257,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarActionPerformed
         original.selectAll();
         original.replaceSelection("");
+        transformado.selectAll();
+        transformado.replaceSelection("");
     }//GEN-LAST:event_limpiarActionPerformed
 
     private void programaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_programaActionPerformed
